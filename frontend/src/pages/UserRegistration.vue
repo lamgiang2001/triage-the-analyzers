@@ -131,7 +131,12 @@ const ready = ref(false) // State to track if validation is complete
 onMounted(async () => {
   const { email, token, courseId, sectionId, role } = route.query as Record<string, string> // Destructure query parameters
 
-  if (!email || !token || !role) {
+  // Every invitation link carries courseId and sectionId, and the backend requires both,
+  // so a link without them is broken: reject it here, like a missing email or token
+  const parsedCourseId = courseId ? parseInt(courseId, 10) : NaN
+  const parsedSectionId = sectionId ? parseInt(sectionId, 10) : NaN
+
+  if (!email || !token || !role || Number.isNaN(parsedCourseId) || Number.isNaN(parsedSectionId)) {
     ElMessage.error('Invalid registration link')
     // redirect to 403
     router.replace('/403')
@@ -153,8 +158,8 @@ onMounted(async () => {
   registration.value.email = email
   registration.value.username = email
   registrationToken.value = token
-  registrationCourseId.value = parseInt(courseId)
-  registrationSectionId.value = parseInt(sectionId)
+  registrationCourseId.value = parsedCourseId
+  registrationSectionId.value = parsedSectionId
   registrationRole.value = role
 
   ready.value = true // show the form only after all checks pass
