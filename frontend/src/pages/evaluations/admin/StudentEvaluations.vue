@@ -147,11 +147,11 @@ const evaluationData = computed(() => {
     (evaluation) => evaluation.averageTotalScore
   )
   return {
-    labels: weeks,
+    labels: weeks ?? [],
     datasets: [
       {
         label: 'Peer Evaluations',
-        data: evaluationAvgTotalScores,
+        data: evaluationAvgTotalScores ?? [],
         backgroundColor: ['#66b1ff']
       }
     ]
