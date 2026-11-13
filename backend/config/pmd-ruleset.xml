@@ -13,5 +13,19 @@
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>PMD quickstart, with Project Pulse's decisions.</description>
     <rule ref="rulesets/java/quickstart.xml">
+        <!-- D2 (assignment 4): every flagged empty constructor is the no-argument constructor that JPA
+             (entities such as Activity, Course, Team) or Jackson (DTOs and reports such as Result,
+             WeeklyPeerEvaluationReport) requires. Deleting an "unnecessary" one works only until someone
+             adds a constructor with arguments, and then the class breaks at runtime, not at compile time.
+             Keeping them explicit is the project's convention, so both rules are off. -->
+        <exclude name="UncommentedEmptyConstructor"/>
+        <exclude name="UnnecessaryConstructor"/>
+        <!-- D3 (assignment 4): ControlStatementBraces stays ON. All 30 findings were fixed by adding braces. -->
+        <!-- D4 (assignment 4): Project Pulse logs through SLF4J with {} placeholders, so the message is
+             only built when the level is enabled. The four flagged calls (ReminderService,
+             WeeklyReminderScheduler, DocumentTemplateRegistry, AuthController) pass plain getters or
+             variables, and an isXxxEnabled() guard would add code without saving any real work.
+             Recheck if a log call ever passes an expensive argument (a query, a serialization). -->
+        <exclude name="GuardLogStatement"/>
     </rule>
 </ruleset>

@@ -7,4 +7,19 @@
 
      Unlike the baseline, this file may grow, but every entry is a reviewed decision. -->
 <FindBugsFilter>
+    <!-- D1 (assignment 4): EI_EXPOSE_REP and EI_EXPOSE_REP2 are off for the whole project.
+         All 219 findings are one of two designs Project Pulse relies on:
+         1. JPA entities (Activity, PeerEvaluation, Section, ...) hand out and keep their collections and
+            associations. Hibernate tracks changes through the collection the entity holds, and services
+            edit entities through their getters (e.g. section.getTeams().add(...)), so a defensive copy
+            would silently stop those changes from being saved.
+         2. Spring beans (controllers, services, converters) keep the dependencies injected into their
+            constructors; sharing that reference is how dependency injection works.
+         Recheck if Project Pulse adds a class outside these two kinds that holds a mutable List, Map or Date. -->
+    <Match>
+        <Or>
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
 </FindBugsFilter>
